@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Daily — The Most Important AI News</title>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0d0f14;
+      --surface:  #161b24;
+      --border:   #242c3d;
+      --accent:   #4f8ef7;
+      --accent2:  #a78bfa;
+      --text:     #e8eaf0;
+      --muted:    #7a829a;
+      --tag-bg:   #1a2236;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      background: rgba(13,15,20,0.85);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+
+    .logo-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .logo-text span { color: var(--accent); }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--text); }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 5rem 2rem 3rem;
+      background: radial-gradient(ellipse 80% 40% at 50% -10%, rgba(79,142,247,0.12), transparent);
+    }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 0.25rem 0.9rem;
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* ── Main Layout ── */
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+    }
+
+    /* ── Date Section ── */
+    .date-section {
+      margin-bottom: 3.5rem;
+    }
+
+    .date-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .date-header h2 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .date-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── News Card ── */
+    .news-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1rem;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .news-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(79,142,247,0.04), transparent 60%);
+      pointer-events: none;
+    }
+
+    .news-card:hover {
+      border-color: rgba(79,142,247,0.4);
+      transform: translateY(-2px);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-number {
+      flex-shrink: 0;
+      width: 26px; height: 26px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 2px;
+    }
+
+    .card-content { flex: 1; }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 0.4rem;
+      text-decoration: none;
+      display: block;
+    }
+
+    .card-title:hover { color: var(--accent); }
+
+    .card-summary {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 0.9rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 0.15rem 0.65rem;
+      font-size: 0.72rem;
+      color: var(--accent2);
+      font-weight: 500;
+    }
+
+    .source {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    footer strong { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════ HEADER ═══════════ -->
+  <header>
+    <a class="logo" href="#">
+      <div class="logo-icon">⚡</div>
+      <span class="logo-text">AI<span>Daily</span></span>
+    </a>
+    <nav>
+      <a href="#">Newsletter</a>
+    </nav>
+  </header>
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <div class="hero">
+    <div class="hero-label">⚡ Updated every day</div>
+    <h1>The most important<br><em>AI news</em>, daily.</h1>
+    <p>Hand-picked stories on artificial intelligence — no noise, just what matters.</p>
+  </div>
+
+  <!-- ═══════════ MAIN CONTENT ═══════════ -->
+  <main>
+
+    <!-- ══════════════════════════════════════
+         📅 HOW TO ADD A NEW DAY:
+         1. Copy the entire <section class="date-section">...</section> block below
+         2. Paste it ABOVE the existing one (newest date goes first)
+         3. Update the date in <h2>
+         4. Update each news card with your content
+         ═══════════════════════════════════ -->
+
+    <!-- ── DATE SECTION: change the date here ── -->
+    <section class="date-section">
+
+      <div class="date-header">
+        <h2>Monday, March 2, 2025</h2>   <!-- ← CHANGE DATE HERE -->
+        <div class="date-line"></div>
+      </div>
+
+      <!-- ── CARD 1 ── Copy/paste this block to add more stories ── -->
+      <article class="news-card">
+        <div class="card-top">
+          <div class="card-number">1</div>
+          <div class="card-content">
+            <a class="card-title" href="https://example.com" target="_blank">
+              Your first headline goes here             <!-- ← CHANGE TITLE -->
+            </a>
+            <p class="card-summary">
+              Write a short 2–3 sentence summary of the story here.
+              Explain why it matters and what the key takeaway is.     <!-- ← CHANGE SUMMARY -->
+            </p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="tag">Research</span>             <!-- ← CHANGE TAG: Research / Product / Policy / Funding / Tools -->
+          <span class="source">Source name</span>       <!-- ← CHANGE SOURCE -->
+        </div>
+      </article>
+
+      <!-- ── CARD 2 ── -->
+      <article class="news-card">
+        <div class="card-top">
+          <div class="card-number">2</div>
+          <div class="card-content">
+            <a class="card-title" href="https://example.com" target="_blank">
+              Your second headline goes here
+            </a>
+            <p class="card-summary">
+              Write a short 2–3 sentence summary of the story here.
+            </p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="tag">Product</span>
+          <span class="source">Source name</span>
+        </div>
+      </article>
+
+      <!-- ── CARD 3 ── -->
+      <article class="news-card">
+        <div class="card-top">
+          <div class="card-number">3</div>
+          <div class="card-content">
+            <a class="card-title" href="https://example.com" target="_blank">
+              Your third headline goes here
+            </a>
+            <p class="card-summary">
+              Write a short 2–3 sentence summary of the story here.
+            </p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="tag">Policy</span>
+          <span class="source">Source name</span>
+        </div>
+      </article>
+
+      <!-- ── ADD MORE CARDS ABOVE THIS LINE ── -->
+
+    </section>
+    <!-- ── END OF DATE SECTION ── -->
+
+
+    <!-- ══════════════════════════════════════
+         PASTE PREVIOUS DAYS BELOW THIS LINE
+         (older dates stack up automatically)
+         ═══════════════════════════════════ -->
+
+  </main>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer>
+    <p>Made with ♥ · <strong>AI Daily</strong> · Updated every weekday</p>
+  </footer>
+
+</body>
+</html>
